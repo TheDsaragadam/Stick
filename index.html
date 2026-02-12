@@ -1,0 +1,586 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LearnWise AI — Study Smarter, Not Longer</title>
+  <meta name="description" content="LearnWise AI helps builders master coding and finance with AI roadmaps, project coaching, and market intelligence." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg: #060a17;
+      --bg-soft: #0b1233;
+      --surface: rgba(255, 255, 255, 0.06);
+      --surface-2: rgba(255, 255, 255, 0.08);
+      --line: rgba(255, 255, 255, 0.15);
+      --text: #eef2ff;
+      --muted: #b5c2ee;
+      --pri: #7b67ff;
+      --sec: #00d2ff;
+      --ok: #00e7a0;
+      --glow: 0 30px 90px rgba(64, 104, 255, 0.34);
+      --radius-xl: 26px;
+      --radius-lg: 18px;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(1200px 720px at 90% -10%, rgba(123,103,255,.34), transparent 55%),
+        radial-gradient(900px 650px at -10% 10%, rgba(0,210,255,.18), transparent 50%),
+        var(--bg);
+      overflow-x: hidden;
+    }
+
+    .scroll-progress {
+      position: fixed;
+      top: 0; left: 0;
+      height: 3px;
+      width: 0%;
+      z-index: 999;
+      background: linear-gradient(90deg, var(--pri), var(--sec));
+      box-shadow: 0 0 18px rgba(123,103,255,.8);
+    }
+
+    .noise {
+      pointer-events: none;
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      opacity: .03;
+      background-image: radial-gradient(#fff 1px, transparent 1px);
+      background-size: 3px 3px;
+      mix-blend-mode: soft-light;
+    }
+
+    .floating-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(40px);
+      opacity: .25;
+      animation: floaty 16s ease-in-out infinite;
+    }
+    .blob.b1 { width: 280px; height: 280px; left: -60px; top: 10%; background: #6b5dff; }
+    .blob.b2 { width: 260px; height: 260px; right: -80px; top: 30%; background: #00d2ff; animation-delay: 2s; }
+    .blob.b3 { width: 220px; height: 220px; left: 35%; bottom: -80px; background: #22e7a8; animation-delay: 5s; }
+    @keyframes floaty {
+      0%,100% { transform: translateY(0) translateX(0); }
+      50% { transform: translateY(-22px) translateX(14px); }
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .container {
+      width: min(1160px, 100% - 40px);
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+
+    .nav {
+      position: sticky; top: 0; z-index: 100;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      backdrop-filter: blur(12px);
+      background: linear-gradient(to bottom, rgba(6,10,23,.88), rgba(6,10,23,.5));
+    }
+    .nav-inner {
+      min-height: 72px;
+      display: flex; align-items: center; justify-content: space-between; gap: 14px;
+    }
+    .brand {
+      font-weight: 800; display: flex; align-items: center; gap: 10px; letter-spacing: .2px;
+    }
+    .logo {
+      width: 30px; height: 30px; border-radius: 10px;
+      background: linear-gradient(135deg, var(--pri), var(--sec));
+      box-shadow: 0 12px 28px rgba(123,103,255,.5);
+    }
+    .links {
+      display: flex; gap: 22px; color: var(--muted); font-weight: 500;
+    }
+
+    .btn {
+      border: 1px solid transparent; border-radius: 14px; padding: 11px 16px;
+      font-weight: 700; display: inline-flex; align-items: center; justify-content: center;
+      transition: transform .22s ease, filter .22s ease, background .22s ease, border-color .22s ease;
+      cursor: pointer;
+    }
+    .btn-main { background: linear-gradient(135deg, var(--pri), var(--sec)); box-shadow: var(--glow); }
+    .btn-main:hover { transform: translateY(-2px); filter: brightness(1.07); }
+    .btn-ghost { background: rgba(255,255,255,.03); border-color: var(--line); }
+    .btn-ghost:hover { transform: translateY(-2px); border-color: rgba(255,255,255,.3); }
+
+    .hero {
+      padding: 26px 0 24px;
+      position: relative;
+      min-height: auto;
+    }
+
+    .pill {
+      display: inline-flex;
+      border: 1px solid rgba(0,231,160,.4);
+      border-radius: 999px;
+      padding: 7px 12px;
+      color: #98f7d4;
+      background: rgba(0,231,160,.08);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    h1 {
+      margin: 18px 0 14px;
+      font-size: clamp(38px, 7.2vw, 78px);
+      line-height: 1.03;
+      letter-spacing: -1.6px;
+      max-width: 940px;
+      background: linear-gradient(180deg, #fff 12%, #d8e0ff 62%, #bcc9ff 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .lead {
+      max-width: 760px;
+      color: var(--muted);
+      font-size: clamp(17px, 2.2vw, 22px);
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    .hero-cta { margin-top: 24px; display: flex; flex-wrap: wrap; gap: 12px; }
+
+    .marquee-wrap {
+      margin-top: 28px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255,255,255,.03);
+    }
+    .marquee {
+      display: flex; width: max-content;
+      animation: move 36s linear infinite;
+      font-size: 13px; color: #cad5ff; font-weight: 600; letter-spacing: .15px; white-space: nowrap;
+    }
+    .marquee span { padding: 10px 16px; border-right: 1px solid rgba(255,255,255,.1); }
+    @keyframes move { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+    .glass-board {
+      margin-top: 30px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      background: linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.03));
+      box-shadow: var(--glow);
+      display: grid;
+      grid-template-columns: 1.15fr .85fr;
+    }
+
+    .panel { padding: 24px; }
+    .panel + .panel { border-left: 1px solid rgba(255,255,255,.09); }
+
+    .mini-card {
+      border: 1px solid var(--line); border-radius: 16px; padding: 14px;
+      background: rgba(255,255,255,.03); margin-bottom: 12px;
+    }
+    .mini-card h4 { margin: 0 0 8px; font-size: 14px; color: #dce5ff; }
+
+    .line { height: 10px; border-radius: 999px; background: #1a244f; overflow: hidden; }
+    .line > i { display: block; height: 100%; width: 78%; background: linear-gradient(90deg, var(--ok), #70ffcf); box-shadow: 0 0 20px rgba(0,231,160,.35); }
+
+    .kpis { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .kpi {
+      border: 1px solid var(--line); border-radius: 16px; padding: 16px;
+      background: rgba(255,255,255,.03);
+    }
+    .kpi b { font-size: 30px; display: block; margin-bottom: 5px; }
+    .kpi small { color: var(--muted); }
+
+    .section { padding: 56px 0 10px; }
+    .section h2 { margin: 0 0 12px; font-size: clamp(30px, 5vw, 56px); letter-spacing: -1px; }
+    .section p { margin: 0; max-width: 760px; color: var(--muted); }
+
+    .features {
+      margin-top: 26px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px;
+    }
+    .feature {
+      border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 18px;
+      background: rgba(255,255,255,.03);
+      transition: transform .22s ease, border-color .22s ease, box-shadow .22s ease;
+    }
+    .feature:hover { border-color: rgba(255,255,255,.3); box-shadow: 0 16px 40px rgba(0,0,0,.25); }
+    .feature h3 { margin: 8px 0; font-size: 20px; }
+    .feature p { margin: 0; font-size: 15px; color: var(--muted); }
+
+    .sticky-wrap {
+      margin-top: 32px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+      align-items: start;
+    }
+
+    .sticky-card {
+      position: sticky;
+      top: 95px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 22px;
+      background: linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.04));
+    }
+
+    .timeline { display: grid; gap: 12px; }
+    .step {
+      border: 1px solid var(--line); border-radius: 16px; padding: 16px;
+      background: rgba(255,255,255,.03);
+    }
+
+    .cta {
+      margin: 48px 0 22px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 28px;
+      background: radial-gradient(900px 300px at 14% -35%, rgba(123,103,255,.36), transparent 46%), rgba(255,255,255,.03);
+      position: relative;
+      overflow: hidden;
+    }
+    .cta::after {
+      content: "";
+      position: absolute;
+      inset: -1px;
+      border-radius: inherit;
+      background: linear-gradient(120deg, rgba(255,255,255,.12), transparent 35%, transparent 65%, rgba(255,255,255,.08));
+      pointer-events: none;
+    }
+    .cta h3 { margin: 0 0 8px; font-size: clamp(24px, 4vw, 44px); letter-spacing: -.8px; }
+
+    .logo-strip {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .logo-pill {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 10px 12px;
+      text-align: center;
+      color: var(--muted);
+      background: rgba(255,255,255,.03);
+      font-weight: 600;
+      font-size: 13px;
+    }
+
+    .compare-grid {
+      margin-top: 22px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .compare-card {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 18px;
+      background: rgba(255,255,255,.03);
+    }
+    .compare-card h4 { margin: 0 0 10px; }
+    .compare-card ul { margin: 0; padding-left: 18px; color: var(--muted); }
+    .compare-card li { margin-bottom: 8px; }
+
+    .testimonial-grid {
+      margin-top: 22px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .quote {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 16px;
+      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
+    }
+    .quote p { color: var(--text); margin: 0 0 10px; }
+    .quote small { color: var(--muted); }
+
+    .faq-list {
+      margin-top: 18px;
+      display: grid;
+      gap: 10px;
+    }
+    .faq-item {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px 16px;
+      background: rgba(255,255,255,.02);
+    }
+    .faq-item b { display: block; margin-bottom: 8px; }
+    .faq-item span { color: var(--muted); }
+
+    footer {
+      padding: 30px 0 56px;
+      color: #9da9d1;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      font-size: 14px;
+    }
+
+    @media (max-width: 980px) {
+      .links { display: none; }
+      .glass-board { grid-template-columns: 1fr; }
+      .panel + .panel { border-left: 0; border-top: 1px solid rgba(255,255,255,.09); }
+      .features { grid-template-columns: 1fr; }
+      .sticky-wrap { grid-template-columns: 1fr; }
+      .sticky-card { position: static; }
+      .kpis { grid-template-columns: 1fr; }
+      .logo-strip { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .compare-grid { grid-template-columns: 1fr; }
+      .testimonial-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+      html { scroll-behavior: auto; }
+      .floating-bg, .noise { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="scroll-progress" id="scrollProgress"></div>
+  <div class="noise"></div>
+  <div class="floating-bg" aria-hidden="true">
+    <span class="blob b1"></span>
+    <span class="blob b2"></span>
+    <span class="blob b3"></span>
+  </div>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a class="brand" href="#home"><i class="logo"></i> LearnWise AI</a>
+      <div class="links">
+        <a href="#features">Features</a>
+        <a href="#flow">How it works</a>
+        <a href="#start">Get Started</a>
+      </div>
+      <a class="btn btn-ghost" href="#start">Try Free</a>
+    </div>
+  </nav>
+
+  <main class="container" id="home">
+    <section class="hero">
+      <div class="pill">🚀 Next-gen AI learning experience</div>
+      <h1 id="heroTitle">Code faster. Invest smarter. Build bigger.</h1>
+      <p class="lead">LearnWise AI turns scattered ideas into coding sprints, product plans, and finance insights you can execute immediately.</p>
+
+      <div class="hero-cta">
+        <a class="btn btn-main" href="#start">Start Building Free</a>
+        <a class="btn btn-ghost" href="#features">Watch Demo</a>
+      </div>
+
+      <div class="marquee-wrap" aria-hidden="true">
+        <div class="marquee">
+          <span>⚡ Build features faster with AI pair guidance</span><span>🧠 Debug and ship with clearer architecture</span><span>📈 Track markets, trends, and risk in real time</span><span>💸 Turn ideas into profitable products</span>
+          <span>⚡ Build features faster with AI pair guidance</span><span>🧠 Debug and ship with clearer architecture</span><span>📈 Track markets, trends, and risk in real time</span><span>💸 Turn ideas into profitable products</span>
+        </div>
+      </div>
+
+      <div class="glass-board" id="results">
+        <div class="panel">
+          <div class="mini-card">
+            <h4>Live Coding Sprint + Market Snapshot</h4>
+            <div class="line"><i></i></div>
+          </div>
+          <div class="mini-card"><h4>AI Breakdown</h4><p>Transforms messy requirements into clean architecture, task breakdowns, and actionable implementation notes.</p></div>
+          <div class="mini-card"><h4>Build Mode</h4><p>Generates implementation steps, code scaffolds, and review checklists so you ship faster with fewer bugs.</p></div>
+        </div>
+        <div class="panel">
+          <div class="kpis">
+            <div class="kpi"><b data-count="2.7">0</b><small>faster build iterations</small></div>
+            <div class="kpi"><b data-count="31">0</b><small>better strategy accuracy</small></div>
+            <div class="kpi"><b data-count="90">0</b><small>seconds to build plan</small></div>
+            <div class="kpi"><b data-count="24">0</b><small>hour AI cofounder support</small></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="features">
+      <h2 class="reveal">Modern learning workflow. Zero fluff.</h2>
+      <p class="reveal">From idea to deployment and from research to investment thesis, every flow is built for execution.</p>
+      <div class="features" id="featureGrid">
+        <article class="feature tilt reveal"><small>01</small><h3>Codebase Intelligence</h3><p>Paste requirements or existing code and get architecture guidance, refactor plans, and clean next steps.</p></article>
+        <article class="feature tilt reveal"><small>02</small><h3>Market Intelligence Engine</h3><p>Track sectors, catalysts, and sentiment with structured insights and risk-first summaries.</p></article>
+        <article class="feature tilt reveal"><small>03</small><h3>Builder Roadmap Planner</h3><p>Create weekly coding milestones and financial goals with realistic timelines and measurable outcomes.</p></article>
+      </div>
+    </section>
+
+    <section class="section" id="flow">
+      <div class="sticky-wrap">
+        <div class="sticky-card reveal">
+          <h2 style="font-size:clamp(28px,4.2vw,48px);margin-top:0;">How LearnWise helps you ship & grow</h2>
+          <p style="color:var(--muted);">Scroll the flow. Each phase is tuned to reduce wasted effort and maximize output and ROI.</p>
+          <div class="hero-cta" style="margin-top:18px;"><a class="btn btn-main" href="#start">Try it now</a></div>
+        </div>
+        <div class="timeline" id="timeline">
+          <div class="step reveal"><b>1. Define your build + finance goal</b><p>Describe what you want to build and what financial outcome you target.</p></div>
+          <div class="step reveal"><b>2. Generate technical gameplan</b><p>Turn ideas into architecture, feature priorities, and delivery sequence.</p></div>
+          <div class="step reveal"><b>3. Build with AI pair execution</b><p>Ship code with guided implementation, debugging loops, and quality checks.</p></div>
+          <div class="step reveal"><b>4. Track market + product metrics</b><p>Monitor trends, unit economics, and risk signals as your project evolves.</p></div>
+          <div class="step reveal"><b>5. Scale what works</b><p>Double down on features and financial decisions with the highest upside.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="social-proof">
+      <h2 class="reveal">Trusted by builders chasing real outcomes.</h2>
+      <p class="reveal">Built for shipping products, improving code quality, and making smarter money decisions.</p>
+      <div class="logo-strip reveal">
+        <div class="logo-pill">iOS Development</div>
+        <div class="logo-pill">Web SaaS</div>
+        <div class="logo-pill">Crypto & Macro</div>
+        <div class="logo-pill">Stock Analysis</div>
+        <div class="logo-pill">Startup Ops</div>
+      </div>
+
+      <div class="compare-grid">
+        <div class="compare-card reveal">
+          <h4>Without LearnWise</h4>
+          <ul>
+            <li>Random tutorial rabbit holes</li>
+            <li>Feature creep, no shipping</li>
+            <li>No clear technical roadmap</li>
+            <li>Emotional, reactive financial decisions</li>
+          </ul>
+        </div>
+        <div class="compare-card reveal">
+          <h4>With LearnWise</h4>
+          <ul>
+            <li>Clear architecture and execution plans</li>
+            <li>Data-backed market and risk insights</li>
+            <li>Week-by-week product + finance roadmap</li>
+            <li>Confidence before major launches/investments</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="testimonials">
+      <h2 class="reveal">What builders say after one week.</h2>
+      <p class="reveal">Real outcomes from focused coding and finance execution with LearnWise AI.</p>
+      <div class="testimonial-grid">
+        <article class="quote reveal">
+          <p>“I shipped in 2 days what used to take me 2 weeks. The roadmap removed all the chaos.”</p>
+          <small>— Arjun, indie iOS dev</small>
+        </article>
+        <article class="quote reveal">
+          <p>“The market breakdown caught risks I missed. I avoided a bad trade and reallocated smarter.”</p>
+          <small>— Maya, student investor</small>
+        </article>
+        <article class="quote reveal">
+          <p>“It feels like having a technical cofounder + analyst in my pocket.”</p>
+          <small>— Leo, solo founder</small>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="faq">
+      <h2 class="reveal">FAQ</h2>
+      <div class="faq-list">
+        <div class="faq-item reveal"><b>How fast can I start?</b><span>In under 2 minutes. Define your project and LearnWise generates your first build + finance action plan.</span></div>
+        <div class="faq-item reveal"><b>Does it support different subjects?</b><span>Yes — app development, web SaaS, automation, stock analysis, and crypto workflows.</span></div>
+        <div class="faq-item reveal"><b>Can teams use it too?</b><span>Yes. Founders, student teams, and solo builders can collaborate around shared plans and metrics.</span></div>
+        <div class="faq-item reveal"><b>Is there a free trial?</b><span>Yes, you can start free and upgrade when you want more sessions and advanced analytics.</span></div>
+      </div>
+    </section>
+
+    <section class="cta" id="start">
+      <h3 class="reveal">Ready to build faster and make smarter money moves?</h3>
+      <p class="lead reveal" style="font-size:18px; margin: 0 0 16px;">Join LearnWise AI and turn every idea into shipped product and sharper financial decisions.</p>
+      <div class="hero-cta reveal">
+        <a class="btn btn-main" href="https://learnwise-ai.com/Home">Launch LearnWise</a>
+        <a class="btn btn-ghost" href="mailto:hello@learnwise-ai.com?subject=LearnWise%20AI%20Demo">Book Demo</a>
+      </div>
+    </section>
+
+    <footer>
+      <span>© 2026 LearnWise AI</span>
+      <span>Built for coders and builders who execute.</span>
+    </footer>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    const progress = document.getElementById('scrollProgress');
+
+    // smooth scroll progress
+    const updateProgress = () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      progress.style.width = (docHeight > 0 ? (scrollTop / docHeight) * 100 : 0) + '%';
+    };
+    document.addEventListener('scroll', updateProgress, { passive: true });
+    updateProgress();
+
+    // natural reveal (non-blocking; elements stay visible until animated)
+    gsap.utils.toArray('.reveal').forEach((el) => {
+      ScrollTrigger.create({
+        trigger: el,
+        start: 'top 88%',
+        once: true,
+        onEnter: () => {
+          gsap.fromTo(
+            el,
+            { opacity: 0, y: 14 },
+            { opacity: 1, y: 0, duration: 0.55, ease: 'power2.out', immediateRender: false, overwrite: 'auto' }
+          );
+        }
+      });
+    });
+
+    // KPI count-up once in view
+    const countTo = (el, target) => {
+      const obj = { val: 0 };
+      gsap.to(obj, {
+        val: target,
+        duration: 1.2,
+        ease: 'power2.out',
+        onUpdate() {
+          const v = obj.val;
+          if (target === 2.7) el.textContent = v.toFixed(1) + '×';
+          else if (target === 31) el.textContent = Math.round(v) + '%';
+          else if (target === 90) el.textContent = Math.round(v) + 's';
+          else if (target === 24) el.textContent = Math.round(v) + '/7';
+          else el.textContent = Math.round(v);
+        }
+      });
+    };
+
+    document.querySelectorAll('.kpi b[data-count]').forEach((b) => {
+      const t = parseFloat(b.dataset.count);
+      ScrollTrigger.create({
+        trigger: b,
+        start: 'top 92%',
+        once: true,
+        onEnter: () => countTo(b, t)
+      });
+    });
+  </script>
+</body>
+</html>
